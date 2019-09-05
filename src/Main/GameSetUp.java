@@ -211,5 +211,16 @@ public class GameSetUp implements Runnable {
     public int getHeight(){
         return height;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
 
