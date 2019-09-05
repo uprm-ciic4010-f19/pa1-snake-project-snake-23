@@ -47,12 +47,8 @@ public class DisplayScreen {
         canvas.setMaximumSize(new Dimension(width, height));
         canvas.setMinimumSize(new Dimension(width, height));
         canvas.setFocusable(false);
-<<<<<<< HEAD
         canvas.setBackground(new Color(153,51,255));
-        
-=======
-        canvas.setBackground(new Color (153,51,255));
->>>>>>> branch 'master' of https://github.com/uprm-ciic4010-f19/pa1-snake-project-snake-23
+
 
         frame.add(canvas);
         frame.pack();
