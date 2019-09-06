@@ -17,6 +17,7 @@ public class Player {
 
     public int xCoord;
     public int yCoord;
+    public double score;
 
     public int moveCounter;
 
@@ -112,7 +113,9 @@ public class Player {
                             handler.getWorld().GridPixelsize,
                             handler.getWorld().GridPixelsize);
                 }
-
+                g.setColor(Color.BLUE);
+                g.setFont(new Font("Arial", Font.PLAIN, 16));
+                g.drawString("Score: "  + this.score, 20, 30); 
             }
         }
 
