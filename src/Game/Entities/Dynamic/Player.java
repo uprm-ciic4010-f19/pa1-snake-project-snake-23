@@ -91,6 +91,7 @@ public class Player {
 
         if(handler.getWorld().appleLocation[xCoord][yCoord]){
             Eat();
+            this.score = Math.sqrt(2 * score + 1) + score ;
         }
 
         if(!handler.getWorld().body.isEmpty()) {
