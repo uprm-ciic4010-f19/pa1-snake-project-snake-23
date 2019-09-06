@@ -17,6 +17,7 @@ public class Player {
 
     public int xCoord;
     public int yCoord;
+    public double score;
 
     public int moveCounter;
     public int speedModifier=0;//Used to modify speed for debugging
@@ -103,6 +104,7 @@ public class Player {
 
         if(handler.getWorld().appleLocation[xCoord][yCoord]){
             Eat();
+            this.score = Math.sqrt(2 * score + 1) + score ;
         }
 
         if(!handler.getWorld().body.isEmpty()) {
@@ -125,7 +127,9 @@ public class Player {
                             handler.getWorld().GridPixelsize,
                             handler.getWorld().GridPixelsize);
                 }
-
+                g.setColor(Color.BLUE);
+                g.setFont(new Font("Arial", Font.PLAIN, 16));
+                g.drawString("Score: "  + this.score, 20, 30); 
             }
         }
 
