@@ -55,6 +55,7 @@ public abstract class WorldBase {
 
     public void render(Graphics g){
 
+    	//Changed initial to 800 instead of deleting the whole lines of code to be able to draw lines later if needed
         for (int i = 800; i <= 800; i = i + GridPixelsize) {
 
             g.setColor(Color.white);
