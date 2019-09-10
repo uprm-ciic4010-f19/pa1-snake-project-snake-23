@@ -3,6 +3,7 @@ package Main;
 import Input.KeyManager;
 import Input.MouseManager;
 import Worlds.WorldBase;
+import Game.GameStates.*;
 
 
 /**
@@ -49,6 +50,13 @@ public class Handler {
 
     public void setWorld(WorldBase world) {
         this.world = world;
+    }
+    
+    public State getState() {
+    	return State.getState();
+    }
+    public void setState(State s) {
+    	State.setState(s);
     }
 
 

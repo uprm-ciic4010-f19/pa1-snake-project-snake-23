@@ -3,6 +3,7 @@ package Game.Entities.Dynamic;
 import Main.Handler;
 
 import java.awt.*;
+import java.awt.Taskbar.State;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 
@@ -59,6 +60,9 @@ public class Player {
         }
         if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS) && speedModifier < 5) {
         	speedModifier+=1;
+        }
+        if(handler.getKeyManager().pbutt) {
+        	handler.setState(handler.getGame().pauseState);
         }
 
     }
