@@ -37,17 +37,17 @@ public class Player {
 
     public void tick(){
         moveCounter++;
-        if(moveCounter>=5+speedModifier) {
+        if(moveCounter>=9+speedModifier) {
             checkCollisionAndMove();
             moveCounter=0;
         }
-        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP)){
+        if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP) && !direction.equals("Down")){
             direction="Up";
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN)){
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN) && !direction.equals("Up")){
             direction="Down";
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT)){
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT) && !direction.equals("Right")){
             direction="Left";
-        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT)){
+        }if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_RIGHT) && !direction.equals("Left")){
             direction="Right";
         }
         //Debug Commands: 'N' to add tail, '+' and '-' to increase and decrease speed respectively.
@@ -127,6 +127,7 @@ public class Player {
                             handler.getWorld().GridPixelsize,
                             handler.getWorld().GridPixelsize);
                 }
+                //Drawing score
                 g.setColor(Color.BLUE);
                 g.setFont(new Font("Arial", Font.PLAIN, 16));
                 g.drawString("Score: "  + this.score, 20, 30); 
@@ -242,6 +243,9 @@ public class Player {
         }
         handler.getWorld().body.addLast(tail);
         handler.getWorld().playerLocation[tail.x][tail.y] = true;
+        
+        //Incrementing speed by (last digit of student ID + 1) every time an apple is eaten
+        speedModifier -= 3;
     }
 
     public void kill(){
