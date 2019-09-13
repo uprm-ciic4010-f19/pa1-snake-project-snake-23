@@ -3,10 +3,9 @@ package Game.Entities.Dynamic;
 import Main.Handler;
 
 import java.awt.*;
-import java.awt.Taskbar.State;
 import java.awt.event.KeyEvent;
 import java.util.Random;
-
+import Game.GameStates.State;
 /**
  * Created by AlexVR on 7/2/2018.
  */
@@ -73,29 +72,29 @@ public class Player {
         int y = yCoord;
         switch (direction){
             case "Left":
-                if(xCoord==0){
-                    kill();
+                if(xCoord == 0){
+                    xCoord = handler.getWorld().GridWidthHeightPixelCount-1;
                 }else{
                     xCoord--;
                 }
                 break;
             case "Right":
                 if(xCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-                    kill();
+                    xCoord = 0;
                 }else{
                     xCoord++;
                 }
                 break;
             case "Up":
                 if(yCoord==0){
-                    kill();
+                    yCoord = handler.getWorld().GridWidthHeightPixelCount-1;
                 }else{
                     yCoord--;
                 }
                 break;
             case "Down":
                 if(yCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-                    kill();
+                    yCoord = 0;
                 }else{
                     yCoord++;
                 }
@@ -116,7 +115,14 @@ public class Player {
             handler.getWorld().body.removeLast();
             handler.getWorld().body.addFirst(new Tail(x, y,handler));
         }
-
+        
+        for(int i = 1; i< handler.getWorld().body.size();i++) {
+        	if(handler.getWorld().body.get(0).x == handler.getWorld().body.get(i).x
+        			&& handler.getWorld().body.get(0).y == handler.getWorld().body.get(i).y) {
+        		kill();
+        	}
+        	
+        }	
     }
 
     public void render(Graphics g,Boolean[][] playeLocation){
@@ -249,7 +255,7 @@ public class Player {
         handler.getWorld().playerLocation[tail.x][tail.y] = true;
         
         //Incrementing speed by (last digit of student ID + 1) every time an apple is eaten
-        speedModifier -= 3;
+        speedModifier -= 2;
     }
 
     public void kill(){
@@ -260,8 +266,15 @@ public class Player {
                 handler.getWorld().playerLocation[i][j]=false;
 
             }
+         
+            State.setState(handler.getGame().gameoverState);
+            
         }
+      
+        
     }
+    
+    
 
     public boolean isJustAte() {
         return justAte;
