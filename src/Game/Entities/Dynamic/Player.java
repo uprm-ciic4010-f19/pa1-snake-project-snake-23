@@ -3,9 +3,10 @@ package Game.Entities.Dynamic;
 import Main.Handler;
 
 import java.awt.*;
-import java.awt.Taskbar.State;
 import java.awt.event.KeyEvent;
 import java.util.Random;
+
+import Game.Entities.Static.Apple;
 
 /**
  * Created by AlexVR on 7/2/2018.
@@ -18,13 +19,16 @@ public class Player {
 
     public int xCoord;
     public int yCoord;
-    public double score;
+    private double score;
 
     public int moveCounter;
     public int speedModifier=0;//Used to modify speed for debugging
 
     public String direction;//is your first name one?
-
+    
+    public static int stepCounter=0;//Used to count steps used in isGood()
+  
+    
     public Player(Handler handler){
         this.handler = handler;
         xCoord = 0;
@@ -61,6 +65,7 @@ public class Player {
         if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_MINUS) && speedModifier < 5) {
         	speedModifier+=1;
         }
+        //When "esc" is pressed, pause the game
         if(handler.getKeyManager().pbutt) {
         	handler.setState(handler.getGame().pauseState);
         }
@@ -108,7 +113,6 @@ public class Player {
 
         if(handler.getWorld().appleLocation[xCoord][yCoord]){
             Eat();
-            this.score = Math.sqrt(2 * score + 1) + score ;
         }
 
         if(!handler.getWorld().body.isEmpty()) {
@@ -116,6 +120,9 @@ public class Player {
             handler.getWorld().body.removeLast();
             handler.getWorld().body.addFirst(new Tail(x, y,handler));
         }
+        //Counting steps taken for isGood()
+        stepCounter++;
+        
 
     }
 
@@ -126,6 +133,14 @@ public class Player {
                 g.setColor(Color.GREEN);
 
                 if(playeLocation[i][j]||handler.getWorld().appleLocation[i][j]){
+                	if(playeLocation[i][j]) 
+                		g.setColor(Color.GREEN);
+                	
+                	//Check if apple is rotten and changes color
+                	else if(!Apple.isGood())
+                		g.setColor(Color.RED);
+                	
+                	
                     g.fillRect((i*handler.getWorld().GridPixelsize),
                             (j*handler.getWorld().GridPixelsize),
                             handler.getWorld().GridPixelsize,
@@ -134,7 +149,7 @@ public class Player {
                 //Drawing score
                 g.setColor(Color.BLUE);
                 g.setFont(new Font("Arial", Font.PLAIN, 16));
-                g.drawString("Score: "  + this.score, 20, 30); 
+                g.drawString("Score: "  + String.format("%.2f", this.getScore()), 20, 30); 
             }
         }
 
@@ -229,7 +244,7 @@ public class Player {
                             tail=(new Tail(this.xCoord-1,this.yCoord,handler));
                         }else{
                             tail=(new Tail(this.xCoord+1,this.yCoord,handler));
-                        } System.out.println("Tu biscochito");
+                        } System.out.println("Tu biscochito");//Found easter egg :)))))))
                     }
                 }else{
                     if(handler.getWorld().body.getLast().y!=0){
@@ -245,11 +260,32 @@ public class Player {
                 }
                 break;
         }
-        handler.getWorld().body.addLast(tail);
-        handler.getWorld().playerLocation[tail.x][tail.y] = true;
+         
+        
+        
+        if (Apple.isGood()) {
+        	//Adding tail if fresh apple is eaten
+        	handler.getWorld().body.addLast(tail);
+        	handler.getWorld().playerLocation[tail.x][tail.y] = true;
+        	
+          //Increasing score if a fresh apple is eaten
+        	setScore(Math.sqrt(2 * getScore() + 1) + getScore());
+        }
+        else {
+        	//Removing tail if a rotten apple is eaten
+        	if(!handler.getWorld().body.isEmpty()) {
+                handler.getWorld().playerLocation[handler.getWorld().body.getLast().x][handler.getWorld().body.getLast().y] = false;
+                handler.getWorld().body.removeLast();
+        	}
+        //decreasing score if a rotten apple is eaten
+        	setScore(-Math.sqrt(2 * Math.abs(getScore()) + 1) + getScore());
+        }
         
         //Incrementing speed by (last digit of student ID + 1) every time an apple is eaten
         speedModifier -= 3;
+        
+        //Resets step counter used for isGood()
+        stepCounter=0;
     }
 
     public void kill(){
@@ -373,8 +409,22 @@ public class Player {
 
                 }
                 break;
-        }
-        handler.getWorld().body.addLast(tail);
+        }   
         handler.getWorld().playerLocation[tail.x][tail.y] = true;
+        
+        if(!handler.getWorld().body.isEmpty()) {
+            handler.getWorld().playerLocation[handler.getWorld().body.getLast().x][handler.getWorld().body.getLast().y] = false;
+            handler.getWorld().body.removeLast();
+        }
     }
+
+    //Getter and setter for score
+	public double getScore() {
+		return score;
+	}
+
+	public void setScore(double score) {
+		this.score = score;
+	}
+
 }
